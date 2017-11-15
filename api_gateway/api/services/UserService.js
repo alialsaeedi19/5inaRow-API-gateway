@@ -9,7 +9,7 @@ class UserService {
     this.url = ''
   }
 
-  get(id) {
+  signOut(id) {
 
     var url = this.url + '/' + id;
     const options = {

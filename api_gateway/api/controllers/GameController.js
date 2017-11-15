@@ -1,10 +1,14 @@
 const GameService = require('../services/GameService');
+const AuthenticationService = require('../services/AuthenticationService')
 
 class GameController {
 
   constructor(config, router) {
     this.gameService = new GameService(config);
+    this.authenticationService = new AuthenticationService(config);
+
     this.config = config;
+
     this.basePath = '/game'
 
     //POST: for creating game : provided url + '/api/game/'
@@ -13,10 +17,10 @@ class GameController {
     // PUT : for updating the content of the game : provided url + '/api/game/123abc'  where 123abc is the id of the game to be updated
     router.put(this.basePath + "/:id", this.update.bind(this));
 
-    // GET: for getting game : provided url + '/api/game/123abc' where 123abc is the id of the game to get
+    // GET: for getting game : provided url + '/api/game/123abc' where 123abc is the id of the game to signOut
     router.get(this.basePath + "/:id", this.get.bind(this));
 
-    // DELETE: for getting game : provided url + '/api/game/123abc' where 123abc is the id of the game to be deleted
+    // DELETE: for quiting game : provided url + '/api/game/123abc' where 123abc is the id of the game to be deleted
     router.delete(this.basePath + "/:id", this.delete.bind(this));
   }
 
@@ -26,7 +30,8 @@ class GameController {
     console.info(method, 'Access to', path);
 
     res.send("success : " + method)
-    // this.gameService.get(req.params.id).then((result) => {
+
+    // this.gameService.signOut(req.params.id).then((result) => {
     //
     // }).catch((err) => {
     //   res.send(500)
@@ -39,13 +44,26 @@ class GameController {
     const path = 'POST ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
-    res.send("success : " + method)
-    // this.gameService.create().then((result) => {
-    //
-    // }).catch((err) => {
-    //
-    //   res.send(500)
-    // });
+    var token = req.header("token");
+
+    this.authenticationService.authenticate(token).then((result) => {
+      var authenticationResponse = result;
+
+      if (authenticationResponse) {
+        this.gameService.create().then((result) => {
+          res.send(result);
+        }).catch((err) => {
+          res.send(500)
+          console.log(method + err);
+        });
+
+      }
+
+    }).catch((err) => {
+      res.send(500)
+      console.log(method + err);
+    });
+
 
   }
 
@@ -54,13 +72,27 @@ class GameController {
     const path = 'PUT ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
-    res.send("success : " + method)
+    var token = req.header("token");
+    var body = req.body;
 
-    // this.gameService.update(req.params.id).then((result) => {
-    //
-    // }).catch((err) => {
-    //   res.send(500)
-    // });
+    this.authenticationService.authenticate(token).then((result) => {
+      var authenticationResponse = result;
+
+      if (authenticationResponse) {
+        this.gameService.update(req.params.id).then((result) => {
+          res.send(result);
+        }).catch((err) => {
+          res.send(500)
+          console.log(method + err);
+        });
+      }
+
+    }).catch((err) => {
+      res.send(500)
+      console.log(method + err);
+    });
+
+
   }
 
   delete(req, res) {
