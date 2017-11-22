@@ -37,7 +37,7 @@ class GameService{
     return rp(options);
   }
 
-  update(id) {
+  update(id ) {
 
 
     var url = this.url + '/' + id;

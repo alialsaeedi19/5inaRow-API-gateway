@@ -19,8 +19,8 @@ class UserController {
     // DELETE: for deleting user : provided url + '/api/user/123abc' where 123abc is the id of the user to be deleted
     router.delete(this.basePath + "/:id", this.delete.bind(this));
 
-    // POST: for Singing in  : provided url + '/api/user/signIn'
-    router.post(this.basePath + "/signIn/:id", this.signIn.bind(this));
+    // POST: for Singing in  : provided url + '/api/user/login'
+    router.post(this.basePath + "/login", this.signIn.bind(this));
 
 
   }
@@ -54,17 +54,20 @@ class UserController {
   }
 
   create(req, res) {
-    const method = 'UserController.create';
+    const method = 'UserController.create ';
     const path = 'POST ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
     var body = req.body;
+    const userName = body.username;
+    const password = body.password;
 
-    this.userService.create().then((result) => {
-      console.info("success" + result.message)
+    this.userService.create(userName , password).then((result) => {
+      res.send(result);
+      console.log("respond has been sent to front end successfully")
     }).catch((err) => {
-      res.send(500);
-      console.log(method + err);
+      res.send(500 + err)
+      console.log(method + err)
     });
 
   }
@@ -86,22 +89,26 @@ class UserController {
   }
 
   signIn(req, res) {
-    const method = 'UserController.signIn';
+    const method = 'UserController.login ';
     const path = 'POST ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
-    var body = req.body
+    const body = req.body
 
-    res.send("success : " + method)
+    const userName = body.username;
+    const password = body.password;
 
-    //   this.userService.singIn(req.params.id).then((result) => {
-    //
-    //   }).catch((err) => {
-    //     res.send(500)
-    //   });
-    // }
+    this.userService.signIn(userName, password).then((result) => {
+      res.send(result);
+
+      console.log("respond has been sent to front end successfully")
+
+    }).catch((err) => {
+      res.send(500 + err)
+      console.log(method + err)
+    });
   }
-
 }
+
 
 module.exports = UserController;

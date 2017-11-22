@@ -6,7 +6,7 @@ class UserService {
     this.config = config;
 
     //the url for the user management that i will call its api from
-    this.url = ''
+    this.url = 'http://localhost:8080/api'
   }
 
   signOut(id) {
@@ -20,18 +20,15 @@ class UserService {
     return rp(options);
   }
 
-  create() {
-    const method = 'UserService.create';
-    const path = 'POST' + this.url + '/';
-    console.info(method, 'Access to', path);
+  create(userName , password) {
 
-    var url = this.url + '/';
+    var url = this.url + '/signup';
     var options = {
       method: 'POST',
       uri: url,
       body: {
-        username: '{userName}',
-        password: '{password}'
+        'name': userName,
+        'password': password
       },
       json: true
     };
@@ -70,18 +67,17 @@ class UserService {
 
   }
 
-  signIn(id, userName, password){
+  signIn( userName, password){
 
-    var url = this.url + '/' + id;
+    var url = this.url + '/login';
+
     var options = {
       method: 'POST',
       uri: url,
       body: {
         // the information to the user
-        username: '{userName}',
-        password: '{password}'
-
-
+        'name': userName,
+        'password': password
       },
       json: true
     };
