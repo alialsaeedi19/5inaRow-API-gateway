@@ -16,9 +16,6 @@ class UserController {
     // GET: for signing out the user : provided url + '/api/user/123abc' where 123abc is the id of the user to sign out
     router.get(this.basePath + "/:id", this.signOut.bind(this));
 
-    // DELETE: for deleting user : provided url + '/api/user/123abc' where 123abc is the id of the user to be deleted
-    router.delete(this.basePath + "/:id", this.delete.bind(this));
-
     // POST: for Singing in  : provided url + '/api/user/login'
     router.post(this.basePath + "/login", this.signIn.bind(this));
 
@@ -41,13 +38,13 @@ class UserController {
         this.userService.signOut(req.params.id).then((result) => {
 
         }).catch((err) => {
-          res.send(500)
+          res.send(502).json({error: err})
         });
       }
 
     }).catch((err) => {
-      res.send(500)
-      console.log(method + err);
+      res.send(502).json({error: err});
+      console.log(method + err.message);
     });
 
 
@@ -62,31 +59,16 @@ class UserController {
     const userName = body.username;
     const password = body.password;
 
-    this.userService.create(userName , password).then((result) => {
+    this.userService.create(userName, password).then((result) => {
       res.send(result);
       console.log("respond has been sent to front end successfully")
     }).catch((err) => {
-      res.send(500 + err)
+      res.send(502).json({error: err});
       console.log(method + err)
     });
 
   }
 
-
-  delete(req, res) {
-    const method = 'UserController.delete';
-    const path = 'DELETE ' + this.basePath + '/';
-    console.info(method, 'Access to', path);
-
-    res.send("success : " + method)
-
-    //   this.userService.delete(req.params.id).then((result) => {
-    //
-    //   }).catch((err) => {
-    //     res.send(500)
-    //   });
-    // }
-  }
 
   signIn(req, res) {
     const method = 'UserController.login ';
@@ -104,8 +86,8 @@ class UserController {
       console.log("respond has been sent to front end successfully")
 
     }).catch((err) => {
-      res.send(500 + err)
-      console.log(method + err)
+      res.send(502).json({error: err});
+      console.log(method + err.message)
     });
   }
 }

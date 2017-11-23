@@ -6,7 +6,7 @@ class GameService{
     this.config = config;
 
     // the url i will call the game api,s from
-    this.url = ''
+    this.url = 'http://localhost:8080/api'
   }
 
   get(id) {

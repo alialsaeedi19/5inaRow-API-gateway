@@ -53,7 +53,7 @@ class GameController {
         this.gameService.create().then((result) => {
           res.send(result);
         }).catch((err) => {
-          res.send(500)
+          res.send(502).json({error: err});
           console.log(method + err);
         });
 
@@ -82,7 +82,7 @@ class GameController {
         this.gameService.update(req.params.id).then((result) => {
           res.send(result);
         }).catch((err) => {
-          res.send(500)
+          res.send(502).json({error: err});
           console.log(method + err);
         });
       }
