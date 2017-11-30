@@ -1,10 +1,12 @@
 const GameService = require('../services/GameService');
 const AuthenticationService = require('../services/AuthenticationService')
+const UserService = require('../services/UserService')
 
 class GameController {
 
   constructor(config, router) {
     this.gameService = new GameService(config);
+    this.userService = new UserService(config);
     this.authenticationService = new AuthenticationService(config);
 
     this.config = config;
@@ -44,24 +46,34 @@ class GameController {
     const path = 'POST ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
-    var token = req.header("token");
+    var headers = req.headers
 
-    this.authenticationService.authenticate(token).then((result) => {
-      var authenticationResponse = result;
+    this.authenticationService.authenticate(headers).then((result) => {
+      var userName = result.msg
 
-      if (authenticationResponse) {
-        this.gameService.create().then((result) => {
-          res.send(result);
-        }).catch((err) => {
-          res.send(502).json({error: err});
-          console.log(method + err);
-        });
+      this.userService.searchForPlayers(userName).then((result) => {
+        res.send(result)
+        var player1 = result.player1
+        var player2 = result.player2
 
-      }
+        // this.gameService.create(player1, player2).then((result) => {
+        //   res.status(201).json({success: true, gameId: result.Game_id});
+        // }).catch((err) => {
+        //   res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        //   console.log(method + err);
+        // });
+
+
+      }).catch((err) => {
+
+        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        console.log(method + err);
+      });
+
 
     }).catch((err) => {
-      res.send(500)
-      console.log(method + err);
+      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      console.log(method + err.statusCode);
     });
 
 
@@ -72,23 +84,25 @@ class GameController {
     const path = 'PUT ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
-    var token = req.header("token");
+    var headers = req.headers
     var body = req.body;
+    var gameid = req.params.id;
+    var row = body.row
+    var column = body.column
 
-    this.authenticationService.authenticate(token).then((result) => {
-      var authenticationResponse = result;
+    this.authenticationService.authenticate(headers).then((result) => {
+      var userName = result.msg
+      res.send(result)
 
-      if (authenticationResponse) {
-        this.gameService.update(req.params.id).then((result) => {
-          res.send(result);
-        }).catch((err) => {
-          res.send(502).json({error: err});
-          console.log(method + err);
-        });
-      }
+      // this.gameService.update(req.params.id, userName, row, column).then((result) => {
+      //   res.status(200).json({success: true, msg: 'player has moved'})
+      // }).catch((err) => {
+      //   res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      //   console.log(method + err);
+      // });
 
     }).catch((err) => {
-      res.send(500)
+      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
       console.log(method + err);
     });
 
@@ -100,16 +114,28 @@ class GameController {
     const path = 'DELETE ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
-    res.send("success : " + method)
+    var headers = req.headers
+    var gameid = req.params.id;
 
-    // this.gameService.delete(req.params.id).then((result) => {
-    //
-    // }).catch((err) => {
-    //   res.send(500)
-    // });
+    this.authenticationService.authenticate(headers).then((result) => {
+      var userName = result.msg
+      res.send(result)
+
+      // this.gameService.delete(gameid, userName).then((result) => {
+      //   res.status(200).json({success: true, highScore: result.highScore})
+      // }).catch((err) => {
+      //   res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      // });
+
+
+    }).catch((err) => {
+      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      console.log(method + err);
+    });
   }
 
 }
 
 
-module.exports = GameController;
+module
+  .exports = GameController;

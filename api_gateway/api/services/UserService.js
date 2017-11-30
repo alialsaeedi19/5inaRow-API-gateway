@@ -6,12 +6,12 @@ class UserService {
     this.config = config;
 
     //the url for the user management that i will call its api from
-    this.url = 'http://localhost:8080/api'
+    this.url = 'http://localhost:4200/api'
   }
 
-  signOut(id) {
+  signOut(userName) {
 
-    var url = this.url + '/' + id;
+    var url = this.url + '/logout' + '/' + userName
     const options = {
       method: 'GET',
       uri: url,
@@ -20,7 +20,7 @@ class UserService {
     return rp(options);
   }
 
-  create(userName , password) {
+  create(userName, password) {
 
     var url = this.url + '/signup';
     var options = {
@@ -58,16 +58,14 @@ class UserService {
     var options = {
       method: 'DELETE',
       uri: url,
-      body: {
-
-      },
+      body: {},
       json: true
     };
     return rp(options);
 
   }
 
-  signIn( userName, password){
+  signIn(userName, password) {
 
     var url = this.url + '/login';
 
@@ -85,6 +83,19 @@ class UserService {
 
   }
 
+  searchForPlayers(firstPlayer) {
+    var url = this.url + '/search';
+
+    var options = {
+      method: 'POST',
+      uri: url,
+      body: {
+        firstPlayer: firstPlayer
+      },
+      json: true
+    };
+    return rp(options)
+  }
 }
 
 

@@ -14,7 +14,7 @@ class UserController {
     router.post(this.basePath + "/", this.create.bind(this));
 
     // GET: for signing out the user : provided url + '/api/user/123abc' where 123abc is the id of the user to sign out
-    router.get(this.basePath + "/:id", this.signOut.bind(this));
+    router.get(this.basePath + "/logout", this.signOut.bind(this));
 
     // POST: for Singing in  : provided url + '/api/user/login'
     router.post(this.basePath + "/login", this.signIn.bind(this));
@@ -27,28 +27,24 @@ class UserController {
     const path = 'GET ' + this.basePath + '/';
     console.info(method, 'Access to', path);
 
-    var token = res.header("token")
+    var headers = req.headers
 
-    res.send(token + 'success')
+    this.authenticationService.authenticate(headers).then((result) => {
 
-    this.authenticationService.authenticate(token).then((result) => {
-      var authenticationResponse = result;
-
-      if (authenticationResponse) {
-        this.userService.signOut(req.params.id).then((result) => {
-
-        }).catch((err) => {
-          res.send(502).json({error: err})
-        });
-      }
-
+      var userName = result.msg
+      this.userService.signOut(userName).then((result) => {
+        res.status(200).json({success:true , msg :'user has signed out successfully' })
+      }).catch((err) => {
+        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      });
     }).catch((err) => {
-      res.send(502).json({error: err});
-      console.log(method + err.message);
+      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      console.log(method + err.statusCode);
     });
 
 
   }
+
 
   create(req, res) {
     const method = 'UserController.create ';
@@ -58,13 +54,13 @@ class UserController {
     var body = req.body;
     const userName = body.username;
     const password = body.password;
+    console.log('user name is ' + userName + ' password is ' + password)
 
     this.userService.create(userName, password).then((result) => {
-      res.send(result);
-      console.log("respond has been sent to front end successfully")
+      res.status(201).json(result)
     }).catch((err) => {
-      res.send(502).json({error: err});
-      console.log(method + err)
+      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      console.log(err.statusCode)
     });
 
   }
@@ -81,13 +77,10 @@ class UserController {
     const password = body.password;
 
     this.userService.signIn(userName, password).then((result) => {
-      res.send(result);
-
-      console.log("respond has been sent to front end successfully")
-
+      res.status(200).json(result);
     }).catch((err) => {
-      res.send(502).json({error: err});
-      console.log(method + err.message)
+      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      console.log(method +  err.response.body)
     });
   }
 }

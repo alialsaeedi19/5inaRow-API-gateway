@@ -6,15 +6,20 @@ class AuthenticationService {
     this.config = config;
 
     //the url for the user management that i will call its api from
-    this.url = ''
+    this.url = 'http://localhost:4200/api'
   }
-  authenticate(token) {
 
-    var url = this.url + '/' + id;
+  authenticate(headers) {
+
+    var token = this.getToken(headers);
+    token = 'JWT ' + token
+
+    var url = this.url + '/checktoken';
     const options = {
       method: 'GET',
       headers: {
-        'token': token
+        Authorization: token
+
       },
       uri: url,
       json: true
@@ -22,6 +27,18 @@ class AuthenticationService {
     return rp(options);
   }
 
+  getToken (headers) {
+    if (headers && headers.authorization) {
+      var parted = headers.authorization.split(' ');
+      if (parted.length === 2) {
+        return parted[1];
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 }
 
 

@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 
-class GameService{
+class GameService {
 
   constructor(config) {
     this.config = config;
@@ -21,15 +21,17 @@ class GameService{
     return rp(options);
   }
 
-  create() {
+  create(player1, player2) {
 
 
-    var url = this.url + '/';
+    var url = this.url + '/create';
     var options = {
       method: 'POST',
       uri: url,
       body: {
-
+        firstPlayer: player1
+        ,
+        secondPlayer: player2
       },
       json: true
     };
@@ -37,36 +39,42 @@ class GameService{
     return rp(options);
   }
 
-  update(id ) {
+  update(id , player , row , column) {
 
 
-    var url = this.url + '/' + id;
+    var url = this.url + '/processing';
     var options = {
       method: 'POST',
       uri: url,
       body: {
-        // some: 'payload'
+        gameid : id,
+        player : player,
+        row : row,
+        column : column
       },
       json: true
     };
 
+    return rp(options);
   }
 
-  delete(id) {
+  delete(id , player) {
 
 
-    var url = this.url + '/' + id;
+    var url = this.url + '/quit';
     var options = {
       method: 'DELETE',
       uri: url,
       body: {
-        // some: 'payload'
-        id : '{id}'
+        gameid : id ,
+        player : player
       },
       json: true
     };
-
+    return rp(options);
   }
+
+
 }
 
 
