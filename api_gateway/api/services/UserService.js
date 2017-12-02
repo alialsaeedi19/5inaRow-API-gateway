@@ -96,6 +96,22 @@ class UserService {
     };
     return rp(options)
   }
+
+  changeStatus(firstPlayer ,secondPlayer, status) {
+    var url = this.url + '/changestatus';
+
+    var options = {
+      method: 'POST',
+      uri: url,
+      body: {
+        firstPlayer: firstPlayer,
+        secondPlayer : secondPlayer,
+        status : status
+      },
+      json: true
+    };
+    return rp(options)
+  }
 }
 
 

@@ -6,13 +6,13 @@ class GameService {
     this.config = config;
 
     // the url i will call the game api,s from
-    this.url = 'http://localhost:8080/api'
+    this.url = 'http://localhost:8080/'
   }
 
-  get(id) {
+  polling(gameId, player) {
 
 
-    var url = this.url + '/' + id;
+    var url = this.url + '/gamesState' + '?' + 'gameId=' + gameId + '&' + 'player='  + player;
     const options = {
       method: 'GET',
       uri: url,
@@ -39,18 +39,18 @@ class GameService {
     return rp(options);
   }
 
-  update(id , player , row , column) {
+  update(gameId, player, row, column) {
 
 
     var url = this.url + '/processing';
     var options = {
-      method: 'POST',
+      method: 'PUT',
       uri: url,
       body: {
-        gameid : id,
-        player : player,
-        row : row,
-        column : column
+        gameId: gameId,
+        lastPlayer: player,
+        row: row,
+        column: column
       },
       json: true
     };
@@ -58,17 +58,13 @@ class GameService {
     return rp(options);
   }
 
-  delete(id , player) {
+  delete(gameId) {
 
 
-    var url = this.url + '/quit';
+    var url = this.url + '/quit' + '?' + 'gameId=' + gameId;
     var options = {
       method: 'DELETE',
       uri: url,
-      body: {
-        gameid : id ,
-        player : player
-      },
       json: true
     };
     return rp(options);
