@@ -79,8 +79,8 @@ class UserController {
     this.userService.signIn(userName, password).then((result) => {
       res.status(200).json(result);
     }).catch((err) => {
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
-      console.log(method +  err.response.body)
+
+      res.status(err.statusCode).json({success: false, msg: err});
     });
   }
 }

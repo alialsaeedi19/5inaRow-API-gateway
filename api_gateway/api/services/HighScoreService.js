@@ -6,12 +6,12 @@ class HighScoreService {
     this.config = config;
 
     //the url for the user management that i will call its api from
-    this.url = ''
+    this.url = 'http://localhost:3002/api/routes/highscoresRoutes'
   }
 
   get() {
 
-    var url = this.url + '/'
+    var url = this.url + '/5inarow/getall'
 
     const options = {
       method: 'GET',

@@ -30,13 +30,30 @@ class GameController {
     const path = 'GET ' + this.basePath + '/';
     console.info(method, 'Access to', path);
     var headers = req.headers
-    var gameId = body.gameId;
+    var gameId = req.params.gameId;
 
     this.authenticationService.authenticate(headers).then((result) => {
       var userName = result.msg
 
       this.gameService.polling(gameId, userName).then((result) => {
-        res.status(200).json({success: true, msg: result})
+
+        if (result.statusCode == 205) {
+          this.gameService.delete(gameId).then((result) => {
+
+            this.userService.changeStatus(result.first_player, result.second_player, 'nothing').then((result) => {
+
+              res.status(205).json({success: true, winner: userName})
+            }).catch((err) => {
+              res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+            });
+
+          }).catch((err) => {
+            res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+          });
+        }
+        else {
+          res.status(200).json({success: true, msg: result})
+        }
 
       }).catch((err) => {
         res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
@@ -66,20 +83,20 @@ class GameController {
         this.gameService.create(player1, player2).then((result) => {
           res.status(201).json({success: true, gameId: result.game_id});
         }).catch((err) => {
-          res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+          res.status(err.statusCode).json({success: false, msg: err.error});
           console.log(method + err);
         });
 
 
       }).catch((err) => {
 
-        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        res.status(err.statusCode).json({success: false, msg: err.error});
         console.log(method + err);
       });
 
 
     }).catch((err) => {
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      res.status(err.statusCode).json({success: false, msg: err.error});
       console.log(method + err.statusCode);
     });
 
@@ -118,12 +135,12 @@ class GameController {
           res.status(200).send({success: true, msg: 'player has moved'})
         }
       }).catch((err) => {
-        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        res.status(err.statusCode).json({success: false, msg: err.response.body.message});
         console.log(method + err);
       });
 
     }).catch((err) => {
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      res.status(err.statusCode).json({success: false, msg: err.response.body.message});
       console.log(method + err);
     });
 
@@ -136,11 +153,10 @@ class GameController {
     console.info(method, 'Access to', path);
 
     var headers = req.headers
-    var gameId = req.body.gameId;
+    var gameId = req.params.gameId;
 
     this.authenticationService.authenticate(headers).then((result) => {
       var userName = result.msg
-      res.send(result)
 
       this.gameService.delete(gameId).then((result) => {
         var firstPlayer = result.first_player
@@ -150,17 +166,21 @@ class GameController {
 
           res.status(200).json({success: true, msg: 'game has finished'})
         }).catch((err) => {
-          res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+          res.status(err.statusCode).json({success: false, msg: err.response.body.message});
         });
 
       }).catch((err) => {
-        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        res.status(err.statusCode).json({success: false, msg: err.response.body.message});
       });
 
 
     }).catch((err) => {
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
-      console.log(method + err);
+      if (err.statusCode == 401){
+        res.status(489).json({success: false, msg :'invalid token'});
+      }
+      else {
+        res.status(err.statusCode).json({success: false, msg: err.response.body.message});
+      }
     });
   }
 
