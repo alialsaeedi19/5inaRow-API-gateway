@@ -19,49 +19,51 @@ class GameController {
     // PUT : for updating the content of the game : provided url + '/api/game/123abc'  where 123abc is the gameId of the game to be updated
     router.put(this.basePath + "/update", this.update.bind(this));
 
-    router.get(this.basePath + "/polling/:gameId", this.get.bind(this));
+    router.get(this.basePath + "/polling/:gameId", this.polling.bind(this));
 
     // DELETE: for quiting game : provided url + '/api/game/123abc' where 123abc is the gameId of the game to be deleted
     router.delete(this.basePath + "/:gameId", this.delete.bind(this));
   }
 
-  get(req, res) {
-    const method = 'GameController.get';
+  polling(req, res) {
+    const method = 'GameController.polling';
     const path = 'GET ' + this.basePath + '/';
     console.info(method, 'Access to', path);
     var headers = req.headers
     var gameId = req.params.gameId;
 
     this.authenticationService.authenticate(headers).then((result) => {
-      var userName = result.msg
+      var userName = result.body.msg
 
       this.gameService.polling(gameId, userName).then((result) => {
+        var status = result.statusCode
+        var gameResult = result
 
-        if (result.statusCode == 205) {
+        if (status == 205) {
           this.gameService.delete(gameId).then((result) => {
 
-            this.userService.changeStatus(result.first_player, result.second_player, 'nothing').then((result) => {
+            this.userService.changeStatus(result.body.first_player, result.body.second_player, 'nothing').then((result) => {
 
-              res.status(205).json({success: true, winner: userName})
+              res.status(status).json(gameResult.body)
             }).catch((err) => {
-              res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+              res.status(err.statusCode).json({success: false, msg: err.error});
             });
 
           }).catch((err) => {
-            res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+            res.status(err.statusCode).json({success: false, msg: err.error});
           });
         }
         else {
-          res.status(200).json({success: true, msg: result})
+          res.status(status).json(gameResult.body)
         }
 
       }).catch((err) => {
-        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        res.status(err.statusCode).json({success: false, msg: err.error});
       });
 
     }).catch((err) => {
 
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      res.status(err.statusCode).json({success: false, msg: err.error});
       console.log(method + err);
     });
   }
@@ -74,23 +76,23 @@ class GameController {
     var headers = req.headers
 
     this.authenticationService.authenticate(headers).then((result) => {
-      var userName = result.msg
+      var userName = result.body.msg
 
       this.userService.searchForPlayers(userName).then((result) => {
-        var player1 = result.player1
-        var player2 = result.player2
+        var player1 = result.body.player1
+        var player2 = result.body.player2
 
         this.gameService.create(player1, player2).then((result) => {
-          res.status(201).json({success: true, gameId: result.game_id});
+          res.status(result.statusCode).json({success: true, gameId: result.body.game_id});
         }).catch((err) => {
-          res.status(err.statusCode).json({success: false, msg: err.error});
+          res.status(err.statusCode).json(err.error);
           console.log(method + err);
         });
 
 
       }).catch((err) => {
 
-        res.status(err.statusCode).json({success: false, msg: err.error});
+        res.status(err.statusCode).json(err.error);
         console.log(method + err);
       });
 
@@ -115,27 +117,27 @@ class GameController {
     var column = body.column
 
     this.authenticationService.authenticate(headers).then((result) => {
-      var userName = result.msg
+      var userName = result.body.msg
 
-      this.gameService.update(req.params.gameId, userName, row, column).then((result) => {
-        if (result.statusCode == 205) {
+      this.gameService.update(gameId, userName, row, column).then((result) => {
+        var status = result.statusCode;
+        if (status == 205) {
           this.gameService.delete(gameId).then((result) => {
-
-            this.userService.changeStatus(result.first_player, result.second_player, 'nothing').then((result) => {
-              res.status(205).json({success: true, winner: userName})
+            this.userService.changeStatus(result.body.first_player, result.body.second_player, 'nothing').then((result) => {
+              res.status(result.statusCode).json({success: true, winner: userName})
             }).catch((err) => {
-              res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+              res.status(err.statusCode).json({success: false, msg: err.error});
             });
 
           }).catch((err) => {
-            res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+            res.status(err.statusCode).json({success: false, msg: err});
           });
         }
         else {
-          res.status(200).send({success: true, msg: 'player has moved'})
+          res.status(status).send({success: true, msg: 'player has moved'})
         }
       }).catch((err) => {
-        res.status(err.statusCode).json({success: false, msg: err.response.body.message});
+        res.status(err.statusCode).json({success: false, msg: err.error});
         console.log(method + err);
       });
 
@@ -156,15 +158,17 @@ class GameController {
     var gameId = req.params.gameId;
 
     this.authenticationService.authenticate(headers).then((result) => {
-      var userName = result.msg
+      var userName = result.body.msg
 
       this.gameService.delete(gameId).then((result) => {
-        var firstPlayer = result.first_player
-        var secondPlayer = result.second_player
+        var gameResult = result
+        var status = result.statusCode
+        var firstPlayer = result.body.first_player
+        var secondPlayer = result.body.second_player
 
         this.userService.changeStatus(firstPlayer, secondPlayer, 'nothing').then((result) => {
 
-          res.status(200).json({success: true, msg: 'game has finished'})
+          res.status(status).json(gameResult.body)
         }).catch((err) => {
           res.status(err.statusCode).json({success: false, msg: err.response.body.message});
         });

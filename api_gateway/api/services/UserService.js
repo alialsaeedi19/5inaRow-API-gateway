@@ -15,7 +15,8 @@ class UserService {
     const options = {
       method: 'GET',
       uri: url,
-      json: true
+      json: true,
+      resolveWithFullResponse: true
     };
     return rp(options);
   }
@@ -30,7 +31,9 @@ class UserService {
         'name': userName,
         'password': password
       },
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
 
     return rp(options);
@@ -46,7 +49,9 @@ class UserService {
         // here the information to be updated ( password)
         password: '{password}'
       },
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options);
   }
@@ -59,7 +64,9 @@ class UserService {
       method: 'DELETE',
       uri: url,
       body: {},
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options);
 
@@ -77,7 +84,9 @@ class UserService {
         'name': userName,
         'password': password
       },
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options);
 
@@ -92,7 +101,9 @@ class UserService {
       body: {
         firstPlayer: firstPlayer
       },
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options)
   }
@@ -108,7 +119,9 @@ class UserService {
         secondPlayer : secondPlayer,
         status : status
       },
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options)
   }

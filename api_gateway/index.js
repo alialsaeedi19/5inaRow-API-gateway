@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const apiRouter = express.Router();
 const UserController = require('./api/controllers/UserController');
 const GameController = require('./api/controllers/GameController');
+const HighScoresController = require('./api/controllers/HighScoresController');
 
 const http = require('http');
 
@@ -25,6 +26,7 @@ apiApp.use('/api', apiRouter);
 
 new UserController(config , apiRouter)
 new GameController(config , apiRouter)
+new HighScoresController(config , apiRouter)
 
 http.createServer(apiApp).listen(config.appPort, '0.0.0.0', function() {
   console.log('APIs on port ' + config.appPort);

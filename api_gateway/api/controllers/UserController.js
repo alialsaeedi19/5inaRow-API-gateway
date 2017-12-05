@@ -31,14 +31,14 @@ class UserController {
 
     this.authenticationService.authenticate(headers).then((result) => {
 
-      var userName = result.msg
+      var userName = result.body.msg
       this.userService.signOut(userName).then((result) => {
-        res.status(200).json({success:true , msg :'user has signed out successfully' })
+        res.status(result.statusCode).json({success:true , msg :'user has signed out successfully' })
       }).catch((err) => {
-        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        res.status(err.statusCode).json(err.error);
       });
     }).catch((err) => {
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      res.status(err.statusCode).json(err.error);
       console.log(method + err.statusCode);
     });
 
@@ -57,9 +57,9 @@ class UserController {
     console.log('user name is ' + userName + ' password is ' + password)
 
     this.userService.create(userName, password).then((result) => {
-      res.status(201).json(result)
+      res.status(201).json(result.body)
     }).catch((err) => {
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      res.status(err.statusCode).json(err.error);
       console.log(err.statusCode)
     });
 
@@ -77,7 +77,7 @@ class UserController {
     const password = body.password;
 
     this.userService.signIn(userName, password).then((result) => {
-      res.status(200).json(result);
+      res.status(200).json(result.body);
     }).catch((err) => {
 
       res.status(err.statusCode).json({success: false, msg: err});

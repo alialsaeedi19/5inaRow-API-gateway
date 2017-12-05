@@ -6,7 +6,7 @@ class HighScoreService {
     this.config = config;
 
     //the url for the user management that i will call its api from
-    this.url = 'http://localhost:3002/api/routes/highscoresRoutes'
+    this.url = 'http://localhost:3002'
   }
 
   get() {
@@ -16,7 +16,9 @@ class HighScoreService {
     const options = {
       method: 'GET',
       uri: url,
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options);
   }

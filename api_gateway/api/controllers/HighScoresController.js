@@ -26,12 +26,12 @@ class HighScoresController {
     this.authenticationService.authenticate(headers).then((result) => {
 
       this.highScoresService.get().then((result) => {
-        res.status(200).json({success: true, msg: result})
+        res.status(200).json({success: true, msg: result.body})
       }).catch((err) => {
-        res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+        res.status(err.statusCode).json({success: false, msg: err.error});
       });
     }).catch((err) => {
-      res.status(err.statusCode).json({success: false, msg: err.response.body.msg});
+      res.status(err.statusCode).json({success: false, msg: err.error});
       console.log(method + err.statusCode);
     });
   }

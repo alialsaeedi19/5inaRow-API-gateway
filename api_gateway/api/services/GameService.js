@@ -6,7 +6,7 @@ class GameService {
     this.config = config;
 
     // the url i will call the game api,s from
-    this.url = 'http://localhost:8080/'
+    this.url = 'http://localhost:8080'
   }
 
   polling(gameId, player) {
@@ -16,7 +16,9 @@ class GameService {
     const options = {
       method: 'GET',
       uri: url,
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options);
   }
@@ -33,7 +35,8 @@ class GameService {
         ,
         secondPlayer: player2
       },
-      json: true
+      json: true,
+      resolveWithFullResponse: true
     };
 
     return rp(options);
@@ -52,7 +55,9 @@ class GameService {
         row: row,
         column: column
       },
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
 
     return rp(options);
@@ -65,7 +70,9 @@ class GameService {
     var options = {
       method: 'DELETE',
       uri: url,
-      json: true
+      json: true,
+      resolveWithFullResponse: true
+
     };
     return rp(options);
   }

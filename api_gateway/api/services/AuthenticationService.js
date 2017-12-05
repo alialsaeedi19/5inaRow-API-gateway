@@ -18,11 +18,12 @@ class AuthenticationService {
     const options = {
       method: 'GET',
       headers: {
-        Authorization: token
+        Authorization: token,
 
       },
       uri: url,
-      json: true
+      json: true,
+      resolveWithFullResponse: true
     };
     return rp(options);
   }
