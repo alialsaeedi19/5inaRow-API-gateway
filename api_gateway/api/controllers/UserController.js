@@ -13,7 +13,7 @@ class UserController {
     //POST: for creating user : provided url + '/api/user/'
     router.post(this.basePath + "/", this.create.bind(this));
 
-    // GET: for signing out the user : provided url + '/api/user/123abc' where 123abc is the id of the user to sign out
+    // GET: for signing out The user : provided url + '/api/user/123abc' where 123abc is The id of The user to sign out
     router.get(this.basePath + "/logout", this.signOut.bind(this));
 
     // POST: for Singing in  : provided url + '/api/user/login'
@@ -33,13 +33,22 @@ class UserController {
 
       var userName = result.body.msg
       this.userService.signOut(userName).then((result) => {
-        res.status(result.statusCode).json({success:true , msg :'user has signed out successfully' })
+        res.status(result.statusCode).json({success: true, msg: 'user has signed out successfully'})
       }).catch((err) => {
-        res.status(err.statusCode).json(err.error);
+        if (!err.statusCode) {
+          res.status(502).json({success: false, msg: 'The user service is not running'});
+        }
+        else {
+          res.status(err.statusCode).json(err.error);
+        }
       });
     }).catch((err) => {
-      res.status(err.statusCode).json(err.error);
-      console.log(method + err.statusCode);
+      if (!err.statusCode) {
+        res.status(502).json({success: false, msg: 'The user service is not running'});
+      }
+      else {
+        res.status(err.statusCode).json(err.error);
+      }
     });
 
 
@@ -59,7 +68,12 @@ class UserController {
     this.userService.create(userName, password).then((result) => {
       res.status(201).json(result.body)
     }).catch((err) => {
-      res.status(err.statusCode).json(err.error);
+      if (!err.statusCode) {
+        res.status(502).json({success: false, msg: 'The user service is not running'});
+      }
+      else {
+        res.status(err.statusCode).json(err.error);
+      }
       console.log(err.statusCode)
     });
 
@@ -79,9 +93,12 @@ class UserController {
     this.userService.signIn(userName, password).then((result) => {
       res.status(200).json(result.body);
     }).catch((err) => {
-
-      res.status(err.statusCode).json({success: false, msg: err});
-    });
+      if(!err.statusCode) {
+        res.status(502).json({success: false, msg: 'The user service is not running'});
+      }
+      else {
+        res.status(err.statusCode).json(err.error);
+      }    });
   }
 }
 
