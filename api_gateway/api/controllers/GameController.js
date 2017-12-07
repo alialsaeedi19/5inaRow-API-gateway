@@ -170,7 +170,7 @@ class GameController {
           });
         }
         else {
-          res.status(status).send({success: true, msg: 'player has moved'})
+          res.status(status).send(gameResults)
         }
       }).catch((err) => {
         if (!err.statusCode) {
