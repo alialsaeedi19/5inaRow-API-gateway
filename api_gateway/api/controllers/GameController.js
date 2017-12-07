@@ -146,10 +146,11 @@ class GameController {
 
       this.gameService.update(gameId, userName, row, column).then((result) => {
         var status = result.statusCode;
+        var gameResults = result.body
         if (status == 205) {
           this.gameService.delete(gameId).then((result) => {
             this.userService.changeStatus(result.body.first_player, result.body.second_player, 'nothing').then((result) => {
-              res.status(result.statusCode).json({success: true, winner: userName})
+              res.status(result.statusCode).json(gameResults)
             }).catch((err) => {
               if (!err.statusCode) {
                 res.status(502).json({success: false, msg: 'The game engine service is not running'});
