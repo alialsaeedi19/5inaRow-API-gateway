@@ -19,7 +19,7 @@ class GameController {
     // PUT : for updating The content of The game : provided url + '/api/game/123abc'  where 123abc is The gameId of The game to be updated
     router.put(this.basePath + "/update", this.update.bind(this));
 
-    router.get(this.basePath + "/polling/:gameId", this.polling.bind(this));
+    router.get(this.basePath + "/poll/:gameId", this.polling.bind(this));
 
     // DELETE: for quiting game : provided url + '/api/game/123abc' where 123abc is The gameId of The game to be deleted
     router.delete(this.basePath + "/:gameId", this.delete.bind(this));
