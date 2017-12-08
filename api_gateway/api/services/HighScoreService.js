@@ -6,7 +6,7 @@ class HighScoreService {
     this.config = config;
 
     //the url for the user management that i will call its api from
-    this.url = 'http://localhost:3002'
+    this.url = 'http://localhost:3001'
   }
 
   get() {
