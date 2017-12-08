@@ -37,6 +37,7 @@ class UserController {
       }).catch((err) => {
         if (!err.statusCode) {
           res.status(502).json({success: false, msg: 'The user service is not running'});
+          console.log('The user service is not running')
         }
         else {
           res.status(err.statusCode).json(err.error);
@@ -45,6 +46,7 @@ class UserController {
     }).catch((err) => {
       if (!err.statusCode) {
         res.status(502).json({success: false, msg: 'The user service is not running'});
+        console.log('The user service is not running')
       }
       else {
         res.status(err.statusCode).json(err.error);
@@ -70,6 +72,7 @@ class UserController {
     }).catch((err) => {
       if (!err.statusCode) {
         res.status(502).json({success: false, msg: 'The user service is not running'});
+        console.log('The user service is not running')
       }
       else {
         res.status(err.statusCode).json(err.error);
@@ -95,6 +98,7 @@ class UserController {
     }).catch((err) => {
       if(!err.statusCode) {
         res.status(502).json({success: false, msg: 'The user service is not running'});
+        console.log('The user service is not running')
       }
       else {
         res.status(err.statusCode).json(err.error);

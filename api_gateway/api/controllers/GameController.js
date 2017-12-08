@@ -46,12 +46,19 @@ class GameController {
 
               res.status(status).json(gameResult.body)
             }).catch((err) => {
-              res.status(err.statusCode).json({success: false, msg: err.error});
+              if (!err.statusCode) {
+                res.status(502).json({success: false, msg: 'The user  service is not running'});
+                console.log('The user service is not running')
+              }
+              else {
+                res.status(err.statusCode).json(err.error);
+              }
             });
 
           }).catch((err) => {
             if (!err.statusCode) {
               res.status(502).json({success: false, msg: 'The game engine service is not running'});
+              console.log('The game engine service is not running')
             }
             else {
               res.status(err.statusCode).json(err.error);
@@ -65,6 +72,7 @@ class GameController {
       }).catch((err) => {
         if (!err.statusCode) {
           res.status(502).json({success: false, msg: 'The game engine service is not running'});
+          console.log('The game engine service is not running')
         }
         else {
           res.status(err.statusCode).json(err.error);
@@ -73,7 +81,8 @@ class GameController {
 
     }).catch((err) => {
       if (!err.statusCode) {
-        res.status(502).json({success: false, msg: 'The game engine service is not running'});
+        res.status(502).json({success: false, msg: 'The user service is not running'});
+        console.log('The user service is not running')
       }
       else {
         res.status(err.statusCode).json(err.error);
@@ -100,6 +109,7 @@ class GameController {
         }).catch((err) => {
           if (!err.statusCode) {
             res.status(502).json({success: false, msg: 'The game engine service is not running'});
+            console.log('The game engine service is not running')
           }
           else {
             res.status(err.statusCode).json(err.error);
@@ -110,7 +120,8 @@ class GameController {
       }).catch((err) => {
 
         if (!err.statusCode) {
-          res.status(502).json({success: false, msg: 'The game engine service is not running'});
+          res.status(502).json({success: false, msg: 'The user service is not running'});
+          console.log('The user service is not running')
         }
         else {
           res.status(err.statusCode).json(err.error);
@@ -120,7 +131,8 @@ class GameController {
 
     }).catch((err) => {
       if (!err.statusCode) {
-        res.status(502).json({success: false, msg: 'The game engine service is not running'});
+        res.status(502).json({success: false, msg: 'The user service is not running'});
+        console.log('The user service is not running')
       }
       else {
         res.status(err.statusCode).json(err.error);
@@ -153,7 +165,8 @@ class GameController {
               res.status(result.statusCode).json(gameResults)
             }).catch((err) => {
               if (!err.statusCode) {
-                res.status(502).json({success: false, msg: 'The game engine service is not running'});
+                res.status(502).json({success: false, msg: 'The user service is not running'});
+                console.log('The user service is not running')
               }
               else {
                 res.status(err.statusCode).json(err.error);
@@ -163,6 +176,7 @@ class GameController {
           }).catch((err) => {
             if (!err.statusCode) {
               res.status(502).json({success: false, msg: 'The game engine service is not running'});
+              console.log('The game engine service is not running')
             }
             else {
               res.status(err.statusCode).json(err.error);
@@ -175,6 +189,7 @@ class GameController {
       }).catch((err) => {
         if (!err.statusCode) {
           res.status(502).json({success: false, msg: 'The game engine service is not running'});
+          console.log('The game engine service is not running')
         }
         else {
           res.status(err.statusCode).json(err.error);
@@ -183,7 +198,8 @@ class GameController {
 
     }).catch((err) => {
       if (!err.statusCode) {
-        res.status(502).json({success: false, msg: 'The game engine service is not running'});
+        res.status(502).json({success: false, msg: 'The user service is not running'});
+        console.log('The user service is not running')
       }
       else {
         res.status(err.statusCode).json(err.error);
@@ -215,7 +231,8 @@ class GameController {
           res.status(status).json(gameResult.body)
         }).catch((err) => {
           if (!err.statusCode) {
-            res.status(502).json({success: false, msg: 'The game engine service is not running'});
+            res.status(502).json({success: false, msg: 'The user service is not running'});
+            console.log('The user service is not running')
           }
           else {
             res.status(err.statusCode).json(err.error);
@@ -225,6 +242,7 @@ class GameController {
       }).catch((err) => {
         if (!err.statusCode) {
           res.status(502).json({success: false, msg: 'The game engine service is not running'});
+          console.log('The game engine service is not running')
         }
         else {
           res.status(err.statusCode).json(err.error);
@@ -235,7 +253,8 @@ class GameController {
     }).catch((err) => {
 
       if (!err.statusCode) {
-        res.status(502).json({success: false, msg: 'The game engine service is not running'});
+        res.status(502).json({success: false, msg: 'The user service is not running'});
+        console.log('The user service is not running')
       }
       else if (err.statusCode == 401) {
         res.status(489).json({success: false, msg: 'invalid token'});
