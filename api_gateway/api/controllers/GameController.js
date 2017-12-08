@@ -28,7 +28,7 @@ class GameController {
   polling(req, res) {
     const method = 'GameController.polling';
     const path = 'GET ' + this.basePath + '/';
-    console.info(method, 'Access to', path);
+    //console.info(method, 'Access to', path);
     var headers = req.headers
     var gameId = req.params.gameId;
 
@@ -43,7 +43,6 @@ class GameController {
           this.gameService.delete(gameId).then((result) => {
 
             this.userService.changeStatus(result.body.first_player, result.body.second_player, 'nothing').then((result) => {
-
               res.status(status).json(gameResult.body)
             }).catch((err) => {
               if (!err.statusCode) {
@@ -62,6 +61,7 @@ class GameController {
             }
             else {
               res.status(err.statusCode).json(err.error);
+              console.log('error in deleting the game ' + err.error)
             }
           });
         }
@@ -159,10 +159,11 @@ class GameController {
       this.gameService.update(gameId, userName, row, column).then((result) => {
         var status = result.statusCode;
         var gameResults = result.body
+
         if (status == 205) {
           this.gameService.delete(gameId).then((result) => {
             this.userService.changeStatus(result.body.first_player, result.body.second_player, 'nothing').then((result) => {
-              res.status(result.statusCode).json(gameResults)
+              res.status(status).json(gameResults)
             }).catch((err) => {
               if (!err.statusCode) {
                 res.status(502).json({success: false, msg: 'The user service is not running'});
@@ -170,6 +171,7 @@ class GameController {
               }
               else {
                 res.status(err.statusCode).json(err.error);
+                console.log('error in changing the status the game ' + err.error)
               }
             });
 
@@ -180,6 +182,7 @@ class GameController {
             }
             else {
               res.status(err.statusCode).json(err.error);
+              console.log('error in deleting the game ' + err.error)
             }
           });
         }
