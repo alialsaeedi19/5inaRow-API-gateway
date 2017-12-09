@@ -160,35 +160,7 @@ class GameController {
         var status = result.statusCode;
         var gameResults = result.body
 
-        if (status == 205) {
-          this.gameService.delete(gameId).then((result) => {
-            this.userService.changeStatus(result.body.first_player, result.body.second_player, 'nothing').then((result) => {
-              res.status(status).json(gameResults)
-            }).catch((err) => {
-              if (!err.statusCode) {
-                res.status(502).json({success: false, msg: 'The user service is not running'});
-                console.log('The user service is not running')
-              }
-              else {
-                res.status(err.statusCode).json(err.error);
-                console.log('error in changing the status the game ' + err.error)
-              }
-            });
-
-          }).catch((err) => {
-            if (!err.statusCode) {
-              res.status(502).json({success: false, msg: 'The game engine service is not running'});
-              console.log('The game engine service is not running')
-            }
-            else {
-              res.status(err.statusCode).json(err.error);
-              console.log('error in deleting the game ' + err.error)
-            }
-          });
-        }
-        else {
           res.status(status).send(gameResults)
-        }
       }).catch((err) => {
         if (!err.statusCode) {
           res.status(502).json({success: false, msg: 'The game engine service is not running'});
