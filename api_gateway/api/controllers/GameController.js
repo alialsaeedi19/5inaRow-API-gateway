@@ -38,8 +38,9 @@ class GameController {
       this.gameService.polling(gameId, userName).then((result) => {
         var status = result.statusCode
         var gameResult = result
+        var body = gameResult.body
 
-        if (status == 205) {
+        if (body.code == 7 || body.code ==8) {
           this.gameService.delete(gameId).then((result) => {
 
             this.userService.changeStatus(result.body.first_player, result.body.second_player, 'nothing').then((result) => {
